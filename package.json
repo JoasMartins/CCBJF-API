@@ -1,0 +1,30 @@
+{
+  "name": "ccbjf-api",
+  "version": "1.0.0",
+  "main": "server.ts",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=local tsnd --transpile-only --respawn --ignore-watch node_modules src/server.ts",
+    "prod": "cross-env NODE_ENV=prod tsnd --transpile-only --respawn --ignore-watch node_modules src/server.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "base64-to-image": "^1.0.2",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.6",
+    "express": "^4.21.1",
+    "faz-um-pix": "^2.0.2",
+    "multer": "^1.4.5-lts.1",
+    "pix": "^0.0.0",
+    "qrcode": "^1.5.4",
+    "sdk-typescript-apis-efi": "^1.0.2",
+    "uuid": "^11.0.3"
+  }
+}
