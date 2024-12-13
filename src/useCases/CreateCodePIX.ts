@@ -39,7 +39,6 @@ export default async function CreateCodePIX(req, res) {
             "./src/database/",
             {'fileName': params.txid, 'type':'png'}
         )
-        //await uploadImagem(params.txid)
 
         return res.status(200).json({ payment, qrcode })
 
