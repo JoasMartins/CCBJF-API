@@ -18,7 +18,7 @@ export default async function CreateCodePIX(req, res) {
             chave: 'contato@applicco.com.br', // Informe sua chave Pix cadastrada na efipay.	
             infoAdicionais: [
                 {
-                    nome: 'Contribuição',
+                    nome: 'Contribuição:',
                     valor: titleContribuicao,
                 }
             ],
