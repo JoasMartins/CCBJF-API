@@ -3,6 +3,7 @@ import multer from "multer";
 //import cors from "cors"
 //import { conectarAoBanco } from "./database";
 import CreateCodePIX from "./useCases/CreateCodePIX";
+import WebhookPIX from "./useCases/WebhookPIX";
 
 const router = Router()
 
@@ -19,5 +20,7 @@ router.post("/users", (req: any, res: any) => {
 })
 
 router.post("/payment/create", CreateCodePIX)
+
+router.post("/webhook", WebhookPIX)
 
 export { router }

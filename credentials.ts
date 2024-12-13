@@ -5,4 +5,5 @@ export default {
     client_id: process.env.PIX_CLIENT_ID,
     client_secret: process.env.PIX_CLIENT_SECRET,
     certificate: `${__dirname}/certificates/${process.env.PIX_CERTIFICATE}`,
+    //pix_cert: `${__dirname}/certificates/${process.env.PIX_CERTIFICATE}`,
 }
