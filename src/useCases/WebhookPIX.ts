@@ -1,6 +1,10 @@
-//import payments from "../payment"
+
 
 export default async function WebhookPIX(req, res) {
-    console.log("WEBHOOK CHAMADO")
+    console.log(`Token de acesso tentado: ${req.headers.token_acess} |=| ${process.env.TOKEN_ACESS}`)
+    if(req.headers.token_acess =! process.env.TOKEN_ACESS) throw 'INVALID_TOKEN'
+
+
+
     return res.status(200).json("Hello World!")
 }
