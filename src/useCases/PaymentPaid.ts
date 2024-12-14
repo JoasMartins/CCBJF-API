@@ -12,11 +12,11 @@ export default async function PaymentPaid(req: any, res: any) {
     })
     console.log(result);
 
-    for(const e of req.params.payment.paid) {
+    for(const e of req.params.pix) {
         try {
             console.log(e)
             const result = await collection.insertOne({
-                payment: JSON.stringify(req.params.paid)
+                payment: JSON.stringify(req.params.pix)
             })
         } catch (error) {
             console.error(error)
