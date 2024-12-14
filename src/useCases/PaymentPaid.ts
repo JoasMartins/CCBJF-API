@@ -1,4 +1,5 @@
 export default async function PaymentPaid(req: any, res: any) {
+    console.log("EVENTO CHAMADO")
     console.log(req.params)
     for(const e of req.params.payment.paid) {
         try {
@@ -8,4 +9,5 @@ export default async function PaymentPaid(req: any, res: any) {
             return res.status(500).json(error)
         }
     }
+    return res.status(200).json(req.params)
 }

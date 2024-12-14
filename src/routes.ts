@@ -27,6 +27,6 @@ router.post("/webhook", WebhookPIX)
 
 router.post("/configwebhook", ConfigWebhook)
 
-router.post("/payment/paid", PaymentPaid)
+router.post("/paid", PaymentPaid)
 
 export { router }
