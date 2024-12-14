@@ -5,6 +5,7 @@ import multer from "multer";
 import CreateCodePIX from "./useCases/CreateCodePIX";
 import WebhookPIX from "./useCases/WebhookPIX";
 import ConfigWebhook from "./useCases/ConfigWebhook";
+import PaymentPaid from "./useCases/PaymentPaid";
 
 const router = Router()
 
@@ -25,5 +26,7 @@ router.post("/payment/create", CreateCodePIX)
 router.post("/webhook", WebhookPIX)
 
 router.post("/configwebhook", ConfigWebhook)
+
+router.post("/payment/paid", PaymentPaid)
 
 export { router }
