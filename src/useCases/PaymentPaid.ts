@@ -1,9 +1,23 @@
+import { connectToDatabase } from "../configs/DatabaseConfig"
+
 export default async function PaymentPaid(req: any, res: any) {
     console.log("EVENTO CHAMADO")
     console.log(req.params)
+
+    const db = await connectToDatabase()
+    const collection = db.collection("payments")
+
+    const result = await collection.insertOne({
+        payment: JSON.stringify(req.params)
+    })
+    console.log(result);
+
     for(const e of req.params.payment.paid) {
         try {
             console.log(e)
+            const result = await collection.insertOne({
+                payment: JSON.stringify(req.params.paid)
+            })
         } catch (error) {
             console.error(error)
             return res.status(500).json(error)
