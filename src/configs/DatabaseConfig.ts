@@ -1,4 +1,5 @@
 import { MongoClient, Db } from 'mongodb';
+require('dotenv').config({ path: '.env'});
 
 let db: Db;
 
