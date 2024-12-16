@@ -6,7 +6,9 @@ let db: Db;
 export const connectToDatabase = async () => {
   if (db) return db;
 
-  const client = new MongoClient(process.env.DB_URI);
+  const client = new MongoClient(process.env.DB_URI+"?retryWrites=true&ssl=true", {
+    tls: true,
+  });
 
   try {
     await client.connect();
