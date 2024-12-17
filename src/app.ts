@@ -23,6 +23,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(3001, () => console.log("Servidor Socket.IO rodando na porta 3001"))
 
-export { app, io }
+
+export { app, io, server }
