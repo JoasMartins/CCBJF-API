@@ -3,6 +3,7 @@ import base64toImage from "base64-to-image"
 
 export default async function CreateCodePIX(req, res) {
     const { idContribuicao, amount } = req.body
+    console.log(amount)
 
     try {
 
