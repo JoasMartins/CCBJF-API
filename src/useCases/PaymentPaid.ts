@@ -4,8 +4,8 @@ import { io } from "../app"
 export default async function PaymentPaid(req: any, res: any) {
     console.log("EVENTO CHAMADO")
 
-    const db = await connectToDatabase()
-    const collection = db.collection("payments")
+    //const db = await connectToDatabase()
+    //const collection = db.collection("payments")
 
     for(const e of req.body.pix) {
         try {
