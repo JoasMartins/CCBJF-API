@@ -1,32 +1,16 @@
 import { Router } from "express";
-import multer from "multer";
-//import cors from "cors"
-//import { conectarAoBanco } from "./database";
-import CreateCodePIX from "./useCases/CreateCodePIX";
-import WebhookPIX from "./useCases/WebhookPIX";
-import ConfigWebhook from "./useCases/ConfigWebhook";
-import PaymentPaid from "./useCases/PaymentPaid";
 
 const router = Router()
 
-
 router.use(async (req: any, res: any, next: any) => {
-    //console.log(req.database)
-    //let databaseConected = await conectarAoBanco(process.env.DATABASE_URI, req)
-    //req.database = databaseConected
     next()
 })
 
-router.post("/users", (req: any, res: any) => {
-    return res.status(201).send()
+//  SISTEMA
+router.post("/system/ping", (req: any, res: any) => {
+    return res.status(200).send({
+        message: "pong"
+    })
 })
-
-router.post("/payment/create", CreateCodePIX)
-
-router.post("/webhook", WebhookPIX)
-
-router.post("/config-webhook", ConfigWebhook)
-
-router.post("/pix", PaymentPaid)
 
 export { router }

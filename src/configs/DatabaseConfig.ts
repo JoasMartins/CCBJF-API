@@ -1,19 +1,19 @@
 import { MongoClient, Db } from 'mongodb';
+import credentials from "../../credentials"
 require('dotenv').config({ path: '.env'});
+
 
 let db: Db;
 
 export const connectToDatabase = async () => {
   if (db) return db;
 
-  const client = new MongoClient(process.env.DB_URI+"?retryWrites=true&ssl=true", {
-    tls: true,
-  });
+  const client = new MongoClient(credentials.dbUri+"?retryWrites=true&w=majority");
 
   try {
     await client.connect();
     console.log('Conectado ao MongoDB com sucesso!');
-    db = client.db("JF");
+    db = client.db(credentials.ambientTests ? "Testes" : "Produção");
     return db;
   } catch (error) {
     console.error('Erro ao conectar ao MongoDB:', error);
