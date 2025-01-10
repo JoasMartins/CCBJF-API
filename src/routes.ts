@@ -25,6 +25,7 @@ router.use(async (req: any, res: any, next: any) => {
 })
 
 import Events from "./useCases/Events"
+import Types from "./useCases/Types";
 
 //  SISTEMA
 router.post("/system/ping", (req: any, res: any) => {
@@ -38,5 +39,8 @@ router.post("/events/get", Events.GET)
 router.post("/events/create", Events.POST)
 router.post("/events/update", Events.UPDATE)
 router.post("/events/delete", Events.DELETE)
+
+//  Tipos
+router.post("/types/events", Types.Events)
 
 export { router }

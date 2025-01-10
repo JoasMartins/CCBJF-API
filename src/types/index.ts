@@ -1,3 +1,4 @@
 import Events from "./EventsType";
+import Types from "./TypesType";
 
-export { Events }
+export { Events, Types }
