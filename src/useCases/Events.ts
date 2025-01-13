@@ -124,54 +124,87 @@ async function Nexts(req: Request, res: Response) {
         const db = await connectToDatabase()
         const collection = db.collection("events")
 
-        function getUpcomingEventOccurrences(events, daysAhead: number = 365): EventOccurrence[] {
-            const today = new Date();
-            const limitDate = addDays(today, daysAhead);
-
-            const occurrences: EventOccurrence[] = [];
-
-            events.forEach(event => {
+        function generateEventsForYear(events, maxDays = 365) {
+            const allOccurrences = [];
+            const now = new Date();
+        
+            for (const event of events) {
                 const { _id, recurrence } = event;
-                const { startDate, endDate, type, interval = 1, daysOfWeek, weekOfMonth } = recurrence;
-
-                let currentDate = new Date(startDate);
-                const endDateObj = endDate ? new Date(endDate) : null;
-
-                while (isBefore(currentDate, limitDate) && (!endDateObj || isBefore(currentDate, endDateObj))) {
-                    if (isWithinInterval(currentDate, { start: today, end: limitDate })) {
-                        // Adiciona a ocorrência ao array
-                        occurrences.push({ _id, date: new Date(currentDate) });
-                    }
-
-                    // Incrementa a data com base no tipo de recorrência
-                    switch (type) {
-                        case "daily":
-                            currentDate = addDays(currentDate, interval);
-                            break;
-
-                        case "weekly":
-                            currentDate = addWeeks(currentDate, interval);
-                            break;
-
-                        case "monthly":
-                            currentDate = addMonths(currentDate, interval);
-                            break;
-
-                        case "yearly":
-                            currentDate = addYears(currentDate, interval);
-                            break;
-
-                        default:
-                            throw new Error(`Tipo de recorrência inválido: ${type}`);
+                const { startDate, type, interval, daysOfWeek, weekOfMonth } = recurrence;
+                const start = new Date(startDate);
+                const end = new Date(start);
+                end.setDate(end.getDate() + maxDays);
+        
+                let currentDate = new Date(start);
+        
+                // Processar recorrências
+                while (currentDate <= end) {
+                    if (type === "weekly") {
+                        // Recorrência semanal
+                        if (daysOfWeek.includes(currentDate.getDay())) {
+                            allOccurrences.push({
+                                _id: _id.$oid || _id,
+                                date: currentDate.toISOString()
+                            });
+                        }
+                        currentDate.setDate(currentDate.getDate() + 7 * interval); // Incrementar semanas
+                    } else if (type === "monthly" && weekOfMonth && daysOfWeek) {
+                        // Recorrência mensal
+                        const year = currentDate.getFullYear();
+                        const month = currentDate.getMonth();
+                        const dayOfWeek = daysOfWeek ? daysOfWeek[0] : [];
+                        const week = weekOfMonth ? weekOfMonth[0] : [];
+        
+                        const nthDay = findNthWeekdayOfMonth(year, month, dayOfWeek, week);
+                        if (nthDay) {
+                            const eventDate = new Date(nthDay);
+                            eventDate.setHours(start.getHours(), start.getMinutes(), start.getSeconds());
+        
+                            if (eventDate >= now && eventDate <= end) {
+                                allOccurrences.push({
+                                    _id: _id.$oid || _id,
+                                    date: eventDate.toISOString()
+                                });
+                            }
+                        }
+                        currentDate.setMonth(currentDate.getMonth() + interval); // Incrementar meses
+                    } else {
+                        // Recorrência não suportada
+                        console.warn(`Recurrence type "${type}" not supported.`);
+                        break;
                     }
                 }
-            });
-
-            return occurrences;
+            }
+        
+            // Ordenar os eventos pelo mais próximo
+            allOccurrences.sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+            return allOccurrences;
         }
+        
+        // Função para encontrar o n-ésimo dia da semana no mês
+        function findNthWeekdayOfMonth(year, month, dayOfWeek, nth) {
+            let count = 0;
+            const date = new Date(year, month, 1);
+        
+            while (date.getMonth() === month) {
+                if (date.getDay() === dayOfWeek) {
+                    count++;
+                    if (count === nth) {
+                        return new Date(date); // Retorna uma cópia da data encontrada
+                    }
+                }
+                date.setDate(date.getDate() + 1);
+            }
+        
+            return null; // Caso não encontre o dia
+        }
+        
+        
 
         let listEvents = await collection.find().toArray()
-        let result = getUpcomingEventOccurrences(listEvents, 365)
+        console.log(listEvents)
+        let result = generateEventsForYear(listEvents, 365)
 
         console.log(result)
 
