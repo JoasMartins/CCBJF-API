@@ -39,6 +39,7 @@ router.post("/events/get", Events.GET)
 router.post("/events/create", Events.POST)
 router.post("/events/update", Events.UPDATE)
 router.post("/events/delete", Events.DELETE)
+router.post("/events/nexts", Events.Nexts)
 
 //  Tipos
 router.post("/types/events", Types.Events)
