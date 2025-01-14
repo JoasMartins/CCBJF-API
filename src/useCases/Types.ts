@@ -4,7 +4,7 @@ import { connectToDatabase } from "../configs/DatabaseConfig"
 
 
 
-async function Events(req: Request, res: Response) {
+async function GET(req: Request, res: Response) {
     try {
         const db = await connectToDatabase()
         const collection = db.collection("types")
@@ -20,7 +20,26 @@ async function Events(req: Request, res: Response) {
     } 
 }
 
+async function POST(req: Request, res: Response) {
+    try {
+        const db = await connectToDatabase()
+        const collection = db.collection("types")
+
+        const item = await collection.insertOne(req.body)
+
+        res.status(201).json(item)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: error?.message })
+    } finally {
+        return
+    }
+}
+
+
+
 
 export default {
-    Events,
+    GET,
+    POST
 }

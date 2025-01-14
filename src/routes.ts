@@ -14,7 +14,7 @@ router.use(async (req: any, res: any, next: any) => {
         return
     }
 
-    if(token != `Bearer ${credentials.token}`) {
+    if(token != `Bearer ${credentials.passwords.adm}` && token != `Bearer ${credentials.passwords.cob}`) {
         res.status(401).send({
             message: "Token inválido"
         })
@@ -37,11 +37,15 @@ router.post("/system/ping", (req: any, res: any) => {
 //  Eventos
 router.post("/events/get", Events.GET)
 router.post("/events/create", Events.POST)
+router.post("/events/create-ia", Events.CreateIA)
 router.post("/events/update", Events.UPDATE)
 router.post("/events/delete", Events.DELETE)
 router.post("/events/nexts", Events.Nexts)
 
+
 //  Tipos
-router.post("/types/events", Types.Events)
+router.post("/types/get", Types.GET)
+router.post("/types/create", Types.POST)
+
 
 export { router }
