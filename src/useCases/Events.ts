@@ -1,8 +1,5 @@
 
 import { Request, Response } from "express"
-import { addDays, isBefore, isAfter, isWithinInterval, addWeeks, addMonths, addYears } from 'date-fns';
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-import { ChatGPTAPI } from 'chatgpt'
 import { connectToDatabase } from "../configs/DatabaseConfig"
 import { Events } from "../types"
 import { ObjectId } from "mongodb";
@@ -26,13 +23,6 @@ interface EventOccurrence {
     date: Date;
 }
 
-const genAI = new GoogleGenerativeAI(process.env.AI_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-const GPT = new ChatGPTAPI({
-    apiKey: process.env.OPENAI_API_KEY
-  })
-
 function sanitizeInput(input: any): Events {
     const sanitized: Events = { ...defaultObject }
 
@@ -43,13 +33,6 @@ function sanitizeInput(input: any): Events {
     });
 
     return sanitized
-}
-
-function IAtoJSON(response: string) {
-    let cut = response.replace('```json', '')
-    cut = cut.replace('```', '')
-
-    return JSON.parse(cut)
 }
 
 //===================================================================
@@ -233,6 +216,21 @@ async function Nexts(req: Request, res: Response) {
         return
     }
 }
+
+
+
+
+
+export default {
+    GET,
+    POST,
+    UPDATE,
+    DELETE,
+    Nexts,
+}
+
+
+/*
 
 async function CreateIA(req: Request, res: Response) {
     try {
@@ -428,12 +426,12 @@ ${JSON.stringify(result)}
         verify = IAtoJSON(verify.response.text())
         console.log(verify)
 
-        
+
         let resultGPT = await GPT.sendMessage("Olá, tudo bem?")
         console.log(resultGPT.text)
         return res.status(200).json(resultGPT)
 
-        if(verify?.error === false){
+        if (verify?.error === false) {
             return res.status(200).json(result)
         } else {
             return res.status(400).json(verify)
@@ -446,13 +444,52 @@ ${JSON.stringify(result)}
     }
 }
 
+async function CreateWithIA(req: Request, res: Response) {
+    try {
+        const db = await connectToDatabase()
+        const collectionTypes = db.collection("types")
 
+        let listTypesEvent = await collectionTypes.findOne({ title: "typeEvent" })
+        let listCities = await collectionTypes.findOne({ title: "city" })
 
-export default {
-    GET,
-    POST,
-    UPDATE,
-    DELETE,
-    Nexts,
-    CreateIA
+        const threadId =  "thread_gXeRM76NaN7UQQuZ1NPqS9bW"//"thread_bYQETqkmqnuaw1apFleKxnFr"//"thread_lzgje1RqvjmlCAAvHuaZ0S99"
+        const assistantId = "asst_dvIOINySatHiNjg5xbkclRRz"
+
+        let messages = await openai.beta.threads.messages.create(threadId, {
+            role: "user",
+            content: req.body.message
+        })
+
+        let run = await openai.beta.threads.runs.createAndPoll(threadId, {
+            assistant_id: assistantId,
+            instructions: `Nas instruições do assistente eu deixei pendente duas arrays, aqui estão elas:
+type: ${JSON.stringify(listTypesEvent.list) || "[]"}
+infos.city: ${JSON.stringify(listCities.list) || "[]"}
+
+devolva o objeto do evento criado`
+        })
+
+        //console.log(run)
+
+        if (run.status === 'completed') {
+            const messages = await openai.beta.threads.messages.list(
+                run.thread_id
+            );
+            for (const message of messages.data.reverse()) {
+                console.log(`[${new Date(message.created_at*1000)}] ${message.role} > ${message.content[0].text.value || ""}`);
+            }
+            return res.status(200).json(messages.data.reverse()[0].content[0].text.value || "")
+        } else {
+            console.log(run.status);
+            return res.status(500).json(run.status)
+        }
+
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: error?.message })
+    } finally {
+        return
+    }
 }
+
+*/

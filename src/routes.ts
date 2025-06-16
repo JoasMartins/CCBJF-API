@@ -37,7 +37,7 @@ router.post("/system/ping", (req: any, res: any) => {
 //  Eventos
 router.post("/events/get", Events.GET)
 router.post("/events/create", Events.POST)
-router.post("/events/create-ia", Events.CreateIA)
+//router.post("/events/create-ia", Events.CreateWithIA)
 router.post("/events/update", Events.UPDATE)
 router.post("/events/delete", Events.DELETE)
 router.post("/events/nexts", Events.Nexts)
